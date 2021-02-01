@@ -1,0 +1,151 @@
+<template>
+  <div class="slds-form-element">
+    <label class="slds-form-element__label" for="multi-select-input"
+      >{label}</label
+    >
+    <div class="slds-form-element__control">
+      <div class="slds-combobox_container">
+        <div
+          class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          role="combobox"
+        >
+          <div
+            class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right"
+            role="none"
+          >
+            <input
+              type="text"
+              class="slds-input slds-combobox__input slds-combobox__input-value"
+              id="multi-select-input"
+              aria-controls="multi-select-list"
+              autocomplete="off"
+              role="textbox"
+              readonly
+              value={selectedValueCount}
+              onclick={showListItems}
+            />
+            <span
+              class="slds-icon_container slds-icon-utility-down slds-input__icon slds-input__icon_right"
+            >
+              <lightning-icon
+                icon-name="utility:down"
+                size="x-small"
+              ></lightning-icon>
+            </span>
+          </div>
+          <div
+            id="multi-select-list"
+            class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid"
+            role="listbox"
+            onmouseover={showListItems}
+            onmouseout={hideListItems}
+          >
+            <ul
+              class="slds-listbox slds-listbox_vertical"
+              role="presentation"
+              onmouseover={showListItems}
+              onmouseout={hideListItems}
+            >
+              <template for:each={listItems} for:item="item">
+                <li
+                  key={item.value}
+                  role="presentation"
+                  class="slds-listbox__item"
+                >
+                  <div
+                    aria-checked="true"
+                    id={item.value}
+                    class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-is-selected"
+                    role="option"
+                    data-value={item.value}
+                    onclick={handleItemSelection}
+                  >
+                    <span class="slds-media__figure slds-listbox__option-icon">
+                      <span
+                        class="slds-icon_container slds-icon-utility-check slds-current-color"
+                      >
+                        <template if:true={item.selected}>
+                          <lightning-icon
+                            icon-name="utility:check"
+                            size="x-small"
+                          ></lightning-icon>
+                        </template>
+                      </span>
+                    </span>
+                    <span class="slds-media__body">
+                      <span class="slds-truncate" title="Accounts"
+                        >{item.label}</span
+                      >
+                    </span>
+                  </div>
+                </li>
+              </template>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class={selectedItemsPillVibibilty}>
+        <lightning-pill-container
+          items={selectedItems}
+          onitemremove={handleItemRemove}
+        >
+          ></lightning-pill-container
+        >
+      </div>
+      <!-- #region 
+      <div class="slds-listbox_selection-group">
+        <ul
+          class="slds-listbox slds-listbox_horizontal"
+          role="listbox"
+          aria-label="Selected Options:"
+          aria-orientation="horizontal"
+        >
+          <li class="slds-listbox-item" role="presentation">
+            <span
+              class="slds-pill"
+              role="option"
+              tabindex="0"
+              aria-selected="true"
+            >
+              <span class="slds-pill__label" title="Accounts">Accounts</span>
+              <span
+                class="slds-icon_container slds-pill__remove"
+                title="Remove"
+              >
+                <svg
+                  class="slds-icon slds-icon_x-small slds-icon-text-default"
+                  aria-hidden="true"
+                >
+                  <use
+                    xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"
+                  ></use>
+                </svg>
+              </span>
+            </span>
+          </li>
+          <li class="slds-listbox-item" role="presentation">
+            <span class="slds-pill" role="option" aria-selected="true">
+              <span class="slds-pill__label" title="Reports">Reports</span>
+              <span
+                class="slds-icon_container slds-pill__remove"
+                title="Remove"
+              >
+                <svg
+                  class="slds-icon slds-icon_x-small slds-icon-text-default"
+                  aria-hidden="true"
+                >
+                  <use
+                    xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"
+                  ></use>
+                </svg>
+              </span>
+            </span>
+          </li>
+        </ul>
+      </div>
+-->
+    </div>
+  </div>
+</template>
