@@ -2,33 +2,12 @@ import { LightningElement, track, api } from "lwc";
 
 export default class LightningInputMultiselectPicklist extends LightningElement {
   @api label;
-
-  @track listItems = [
-    {
-      label: "Item1",
-      value: "Item1",
-      selected: false
-    },
-    {
-      label: "Item2",
-      value: "Item2",
-      selected: false
-    },
-    {
-      label: "Item3",
-      value: "Item3",
-      selected: true
-    },
-    {
-      label: "Item4",
-      value: "Item4",
-      selected: false
-    }
-  ];
-
+  @api items;
+  @track listItems;
   @track selectedItems = [];
 
   connectedCallback() {
+    this.listItems = JSON.parse(JSON.stringify(this.items));
     this.loadSelectedItems();
   }
 
@@ -62,23 +41,11 @@ export default class LightningInputMultiselectPicklist extends LightningElement 
         if (selectedItem.selected) {
           element.selected = false;
           this.removeSelectedItems(element.value);
-          // Creates the event with the contact ID data.
-          const selectedEvent = new CustomEvent("remove", {
-            detail: element.value
-          });
-
-          // Dispatches the event.
-          this.dispatchEvent(selectedEvent);
+          this.sendSelecteditems();
         } else {
           element.selected = true;
-
           this.loadSelectedItems();
-          const selectedEvent = new CustomEvent("selected", {
-            detail: element.value
-          });
-
-          // Dispatches the event.
-          this.dispatchEvent(selectedEvent);
+          this.sendSelecteditems();
         }
       }
     });
@@ -96,31 +63,37 @@ export default class LightningInputMultiselectPicklist extends LightningElement 
     });
   }
   removeSelectedItems(item) {
-    for (let index = 0; index < this.selectedItems.length; index++) {
-      const element = this.selectedItems[index];
-      if (element.name === item) {
-        this.selectedItems.splice(index, 1);
-      }
+    let itemIndex = this.getIndexOfItem(this.selectedItems, item);
+    if (itemIndex) {
+      this.selectedItems.splice(itemIndex, 1);
     }
   }
   handleItemRemove(event) {
     //removing from pill
     const index = event.detail.index;
-    this.selectedItems.splice(index, 1);
 
     //Unchecking from list
     const value = event.detail.item.name;
     this.listItems.forEach((element) => {
       if (element.value === value) {
         element.selected = false;
-        // Creates the event with the contact ID data.
-        const selectedEvent = new CustomEvent("remove", {
-          detail: element.value
-        });
-
-        // Dispatches the event.
-        this.dispatchEvent(selectedEvent);
       }
     });
+    this.selectedItems.splice(index, 1);
+    this.sendSelecteditems();
+  }
+  getIndexOfItem(array, item) {
+    const itemMap = array.map(function (item) {
+      item.value;
+    });
+    return itemMap.indexOf(item);
+  }
+
+  sendSelecteditems() {
+    const customEvent = new CustomEvent("change", {
+      detail: JSON.stringify(this.selectedItems)
+    });
+
+    this.dispatchEvent(customEvent);
   }
 }
